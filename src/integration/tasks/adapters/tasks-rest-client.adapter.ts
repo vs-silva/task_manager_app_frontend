@@ -3,7 +3,7 @@ import ApiEngine from "../../../infrastructure/api-engine";
 
 export function TasksRestClientAdapter(): TasksServiceDrivenPort {
 
-    const endpoint = 'http://localhost:8000';
+    const endpoint = 'https://quaint-bull-umbrella.cyclic.app';
 
     async function get(resourceURI: string): Promise<object[]> {
         const response = await ApiEngine.get(`${endpoint}${resourceURI}`);
