@@ -15,17 +15,35 @@ export const getTasks = createAsyncThunk(
         return await Tasks.getTasks();
     });
 
+export const getTask = createAsyncThunk(
+    'get-task',
+    async (taskId: string) => {
+        return await Tasks.getTask(taskId);
+    });
+
 // @ts-ignore
 function builderProcessor(builder) {
     // @ts-ignore
     builder.addCase(getTasks.fulfilled, (state, action) => {
         state.tasks = action.payload;
     });
+
+    // @ts-ignore
+    builder.addCase(getTask.fulfilled, (state, action) => {
+        state.task = action.payload;
+    });
+}
+
+// @ts-ignore
+function clearTask(state):void {
+    state.task = <TaskDTO>{};
 }
 
 export default createSlice({
     name: 'tasks-store-slice',
     initialState,
-    reducers: {},
+    reducers: {
+        clearTask
+    },
     extraReducers: builderProcessor
 });

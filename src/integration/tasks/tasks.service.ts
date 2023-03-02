@@ -11,7 +11,13 @@ export function TasksService(reader: TasksServiceDrivenPort): TasksServiceDriver
         return await TasksMapperService.mapToTaskDTOCollection(response);
     }
 
+    async function getTask(taskID: string): Promise<TaskDTO> {
+        const response = await reader.get(`${TasksURIConstants.TASKS}/${taskID}`);
+        return await TasksMapperService.mapToTaskDTO(response);
+    }
+
     return {
-      getTasks
+      getTasks,
+      getTask
     };
 }

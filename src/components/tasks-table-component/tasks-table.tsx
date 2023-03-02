@@ -1,5 +1,7 @@
 import {MouseEvent} from "react";
 import type {TaskDTO} from "../../integration/tasks/business/dtos/task.dto";
+import Eventbus from "../../eventbus";
+import {EventTypeConstants} from "../../eventbus/event-type.constants";
 
 export function TasksTable(props: {tasks: TaskDTO[]}): JSX.Element {
 
@@ -9,14 +11,7 @@ export function TasksTable(props: {tasks: TaskDTO[]}): JSX.Element {
         return (<></>);
     }
 
-    function openModal(taskID: string):void {
-        console.log(taskID);
-    }
-
-
     return (<>
-        <p>Table component here!!</p>
-        {JSON.stringify(tasks)}
 
         <table className="table-auto">
             <thead>
@@ -38,7 +33,7 @@ export function TasksTable(props: {tasks: TaskDTO[]}): JSX.Element {
                         <td>{task.creationDate}</td>
                         <td><button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onClick={(event: MouseEvent<HTMLButtonElement>) => {
                             event.preventDefault();
-                            openModal(task.id);
+                            Eventbus.emit(EventTypeConstants.OPEN_MODAL, task.id);
                         }
                         }>Edit/Delete</button></td>
                     </tr>)
