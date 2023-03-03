@@ -2,6 +2,7 @@ import {MouseEvent} from "react";
 import type {TaskDTO} from "../../integration/tasks/business/dtos/task.dto";
 import Eventbus from "../../eventbus";
 import {EventTypeConstants} from "../../eventbus/event-type.constants";
+import moment from "moment";
 
 export function TasksTable(props: {tasks: TaskDTO[]}): JSX.Element {
 
@@ -30,7 +31,7 @@ export function TasksTable(props: {tasks: TaskDTO[]}): JSX.Element {
                         <td>{task.title}</td>
                         <td>{task.priority}</td>
                         <td>{task.status}</td>
-                        <td>{task.creationDate}</td>
+                        <td>{moment(task.creationDate).format('YYYY-MM-DD')}</td>
                         <td><button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onClick={(event: MouseEvent<HTMLButtonElement>) => {
                             event.preventDefault();
                             Eventbus.emit(EventTypeConstants.OPEN_MODAL, task.id);

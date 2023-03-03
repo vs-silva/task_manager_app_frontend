@@ -31,8 +31,8 @@ export const deleteTask = createAsyncThunk(
         return;
     });
 
-export const updateTask = createAsyncThunk(
-    'update-task',
+export const createORUpdateTask = createAsyncThunk(
+    'create-update-task',
     async (updateTaskRequestDTO: TaskOptionalRequestDTO, { dispatch }) => {
         await Tasks.createOrUpdateTask(updateTaskRequestDTO);
         Eventbus.emit(EventTypeConstants.CLOSE_MODAL);
@@ -58,7 +58,7 @@ function builderProcessor(builder) {
     });
 
     // @ts-ignore
-    builder.addCase(updateTask.fulfilled, () => {
+    builder.addCase(createORUpdateTask.fulfilled, () => {
         return;
     });
 }

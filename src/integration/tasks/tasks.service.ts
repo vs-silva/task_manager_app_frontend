@@ -22,7 +22,8 @@ export function TasksService(adapter: TasksServiceDrivenPort): TasksServiceDrive
     }
 
     async function createOrUpdateTask(taskOptionalRequestDTO: TaskOptionalRequestDTO): Promise<void> {
-        return await adapter.save(`${TasksURIConstants.TASKS}/${taskOptionalRequestDTO.id}`, taskOptionalRequestDTO);
+        const resourceURI: string = taskOptionalRequestDTO.id ? `${TasksURIConstants.TASKS}/${taskOptionalRequestDTO.id}` : `${TasksURIConstants.TASKS}`;
+        return await adapter.save(`${resourceURI}`, taskOptionalRequestDTO);
     }
 
     return {

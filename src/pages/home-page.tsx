@@ -1,12 +1,13 @@
 import {useDispatch, useSelector} from "react-redux";
 import {useEffect, useState} from "react";
-import TasksStoreSlice, {getTask, getTasks, deleteTask, updateTask} from "../store/tasks-store-slice";
+import TasksStoreSlice, {getTask, getTasks, deleteTask, createORUpdateTask} from "../store/tasks-store-slice";
 import {TasksTable} from "../components/tasks-table-component/tasks-table";
 import Eventbus from "../eventbus";
 import {EventTypeConstants} from "../eventbus/event-type.constants";
 import {Modal} from "../components/modal-component/modal";
 import {TaskDetail} from "../components/task-detail-component/task-detail";
 import {TaskOptionalRequestDTO} from "../integration/tasks/business/dtos/task-optional-request.dto";
+import {TaskCreate} from "../components/task-create-component/task-create";
 
 export function HomePage(): JSX.Element {
 
@@ -15,8 +16,9 @@ export function HomePage(): JSX.Element {
     const [requestTaskID, setRequestTaskID] = useState('');
     const [deleteTaskID, setDeleteTaskID] = useState('');
 
-    const initialUpdateTaskRequest:TaskOptionalRequestDTO = {};
-    const [updateTaskRequest, setUpdateTaskRequest] = useState(initialUpdateTaskRequest);
+    const initialCreateOrUpdateRequestDTO:TaskOptionalRequestDTO = {};
+    const [createORUpdateTaskRequest, setCreateORUpdateTaskRequest] = useState(initialCreateOrUpdateRequestDTO);
+
 
     // @ts-ignore
     const { tasks, task } = useSelector(state => state.tasksStoreSlice);
@@ -49,19 +51,23 @@ export function HomePage(): JSX.Element {
 
 
     useEffect(() => {
-        if(!updateTaskRequest.id) {
+        if(!createORUpdateTaskRequest.id && !createORUpdateTaskRequest.title) {
             return;
         }
 
         // @ts-ignore
-        dispatch(updateTask(updateTaskRequest));
+        dispatch(createORUpdateTask(createORUpdateTaskRequest));
+        return;
 
-    }, [updateTaskRequest]);
+    }, [createORUpdateTaskRequest]);
+
 
 
     // @ts-ignore
-    Eventbus.on(EventTypeConstants.OPEN_MODAL, (taskID: string) => {
-        setRequestTaskID(taskID);
+    Eventbus.on(EventTypeConstants.OPEN_MODAL, (taskID?: string) => {
+        if(taskID) {
+            setRequestTaskID(taskID);
+        }
         setShowModal(true);
     });
 
@@ -69,6 +75,7 @@ export function HomePage(): JSX.Element {
     Eventbus.on(EventTypeConstants.CLOSE_MODAL, () => {
         setShowModal(false);
         setRequestTaskID('');
+        setCreateORUpdateTaskRequest(initialCreateOrUpdateRequestDTO);
         dispatch(clearTask());
     });
 
@@ -78,13 +85,15 @@ export function HomePage(): JSX.Element {
     });
 
     // @ts-ignore
-    Eventbus.on(EventTypeConstants.UPDATE_TASK, (updateRequest: TaskOptionalRequestDTO) => {
-        setUpdateTaskRequest(updateRequest);
+    Eventbus.on(EventTypeConstants.CREATE_UPDATE_TASK, (optionalRequestDTO: TaskOptionalRequestDTO) => {
+        setCreateORUpdateTaskRequest(optionalRequestDTO);
     });
+
 
     // @ts-ignore
     return(<div>
 
+        <TaskCreate />
         <TasksTable tasks={tasks} />
         <Modal showModal={showModal}>
             <TaskDetail task={task} />
