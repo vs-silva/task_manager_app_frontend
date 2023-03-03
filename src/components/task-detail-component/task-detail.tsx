@@ -1,7 +1,7 @@
 import {TaskDTO} from "../../integration/tasks/business/dtos/task.dto";
 import Eventbus from "../../eventbus";
 import {EventTypeConstants} from "../../eventbus/event-type.constants";
-import {MouseEvent, ChangeEvent, useState} from "react";
+import {MouseEvent, ChangeEvent, useState, useEffect} from "react";
 import moment from "moment";
 import {TasksStatusConstants} from "../../integration/tasks/business/constants/tasks-status.constants";
 import {TasksPriorityConstants} from "../../integration/tasks/business/constants/tasks-priority.constants";
@@ -15,6 +15,16 @@ export function TaskDetail(props: {task: TaskDTO}): JSX.Element {
     const [descriptionValue, setDescriptionValue] = useState('');
     const [statusValue, setStatusValue] = useState('');
     const [priorityValue, setPriorityValue] = useState('');
+
+    useEffect(() => {
+
+        if(!task.id){
+            return;
+        }
+
+        setStatusValue(task.status);
+        setPriorityValue(task.priority);
+    }, [task]);
 
 
     return (<>
@@ -37,7 +47,7 @@ export function TaskDetail(props: {task: TaskDTO}): JSX.Element {
                   onChange={(event: ChangeEvent<HTMLTextAreaElement>) => setDescriptionValue(event.target.value)}/>
 
         <div><span className="mr-2">Status:</span><select
-            value={task.id ? task.status: statusValue}
+            value={statusValue}
             disabled={task.canEdit}
             onChange={(event: ChangeEvent<HTMLSelectElement>) => setStatusValue(event.target.value)}>
             {
@@ -48,7 +58,7 @@ export function TaskDetail(props: {task: TaskDTO}): JSX.Element {
         </select></div>
 
         <div><span className="mr-2">Priority:</span><select
-            value={task.priority}
+            value={priorityValue}
             disabled={task.canEdit}
             onChange={(event: ChangeEvent<HTMLSelectElement>) => setPriorityValue(event.target.value)}>
             {
@@ -64,33 +74,47 @@ export function TaskDetail(props: {task: TaskDTO}): JSX.Element {
         <div className="mt-2">
 
             {
+
+
                 task.id && (<>
-                    <button type="button"
-                            onClick={(event:MouseEvent<HTMLButtonElement>) => {
-                                event.preventDefault();
-                                const canUpdate = (( titleValue || descriptionValue || statusValue || priorityValue ) !== '');
 
-                                if(!canUpdate) {
-                                    return;
-                                }
+                    {
+                        !task.canEdit && (<>
+                            <button type="button"
+                                    onClick={(event:MouseEvent<HTMLButtonElement>) => {
+                                        event.preventDefault();
+                                        const canUpdate = (( titleValue || descriptionValue || statusValue || priorityValue ) !== '');
 
-                                const optionalRequest: TaskOptionalRequestDTO = {
-                                    id: task.id,
-                                    title: titleValue || task.title,
-                                    description: descriptionValue || task.description,
-                                    status: statusValue || task.status,
-                                    priority: priorityValue || task.priority
-                                };
+                                        if(!canUpdate) {
+                                            return;
+                                        }
 
-                                Eventbus.emit(EventTypeConstants.CREATE_UPDATE_TASK,optionalRequest);
-                            }}
-                            className={`text-white font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 ${!task.canEdit ? "bg-blue-700 hover:bg-blue-800 dark:bg-blue-600 dark:hover:bg-blue-700": "bg-gray-700 dark:bg-gray-600"}`}>Update
-                    </button>
+                                        const optionalRequest: TaskOptionalRequestDTO = {
+                                            id: task.id,
+                                            title: titleValue || task.title,
+                                            description: descriptionValue || task.description,
+                                            status: statusValue || task.status,
+                                            priority: priorityValue || task.priority
+                                        };
 
-                <button type="button"
-                onClick={() => Eventbus.emit(EventTypeConstants.DELETE_TASK, task.id)}
-                className="text-white bg-red-700 hover:bg-red-800 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 ">Delete
-                </button>
+                                        Eventbus.emit(EventTypeConstants.CREATE_UPDATE_TASK,optionalRequest);
+                                    }}
+                                    className={"text-white font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 bg-blue-700 hover:bg-blue-800 dark:bg-blue-600 dark:hover:bg-blue-700"}>Update
+                            </button>
+                        </>)
+                    }
+
+                    {
+                        task.canDelete && (
+                            <>
+                                <button type="button"
+                                        onClick={() => Eventbus.emit(EventTypeConstants.DELETE_TASK, task.id)}
+                                        className="text-white bg-red-700 hover:bg-red-800 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 ">Delete
+                                </button>
+                            </>
+                        )
+
+                    }
                     </>)
             }
 
