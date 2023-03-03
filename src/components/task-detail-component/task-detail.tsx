@@ -30,14 +30,24 @@ export function TaskDetail(props: {task: TaskDTO}): JSX.Element {
     return (<>
         <hr />
 
+        <label
+            htmlFor="taskTitle"
+            className="text-neutral-500"
+        >Title
+        </label>
         <input id="taskTitle"
                type="text"
-               className="w-full bg-white text-base font-semibold mb-2"
+               className="w-full bg-white text-base font-semibold rounded border-0 mb-2"
                disabled={task.canEdit}
                defaultValue={ task.id ? task.title: titleValue}
                placeholder="insert your title here..."
                onChange={(event: ChangeEvent<HTMLInputElement>) => setTitleValue(event.target.value)}/>
 
+        <label
+            htmlFor="taskDescription"
+            className="text-neutral-500"
+        >Description
+        </label>
         <textarea id="taskDescription"
                   defaultValue={task.id ? task.description : descriptionValue}
                   rows={4}
