@@ -2,3 +2,24 @@
 @tailwind components;
 @tailwind utilities;
 @tailwind screens;
+
+/* modal */
+.custom-modal-background {
+    position: fixed;
+    z-index: 40;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0 ,.5);
+}
+
+.custom-modal-body {
+    background-color: white;
+    margin: 10% auto;
+    padding: 1.6em;
+    width: 50%;
+    color: black;
+    overflow: auto;
+}
