@@ -23,4 +23,10 @@ A simple web client frontend for task manager backend api.<br>
 - Application State Management ( Redux Toolkit )
 - APIs Integration ( Axios )
 - Eventbus ( Mitt )
-- Graph ( Chart.js )
+
+#### How to run locally
+- npm install ( to install the required project dependencies )
+- npm run dev ( to run the project locally )
+- npm run test ( to run the available tests )
+- npm run test:cov ( to run and get the test coverage )
+
