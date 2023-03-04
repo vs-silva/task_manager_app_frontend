@@ -2,6 +2,7 @@
 A simple web client frontend for task manager backend api.<br>
 
 ### Current project status ( Still under development )
+- [try it live](https://sore-gray-bear-wear.cyclic.app/)
 - [source code](https://github.com/vs-silva/task_manager_app_frontend)
 
 #### Development Approach
