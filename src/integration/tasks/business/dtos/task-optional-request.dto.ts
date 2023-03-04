@@ -1,4 +1,4 @@
-export interface TasksOptionalRequestPayloadDTO {
+export interface TaskOptionalRequestDTO {
     id?: string;
     title?: string;
     description?: string;

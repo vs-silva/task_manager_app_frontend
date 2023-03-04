@@ -1,3 +1,3 @@
 export const TasksURIConstants = Object.freeze({
-    TASKS: '/tasks'
+    TASKS: '/tasks',
 } as const);
